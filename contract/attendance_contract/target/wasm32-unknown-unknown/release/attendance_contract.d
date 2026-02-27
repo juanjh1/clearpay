@@ -1,0 +1,1 @@
+C:\Users\diegata\Documents\QR_STELLAR\contract\attendance_contract\target\wasm32-unknown-unknown\release\attendance_contract.wasm: C:\Users\diegata\Documents\QR_STELLAR\contract\attendance_contract\src\lib.rs

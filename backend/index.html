@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Payroll MVP</title>
+    <script src="https://unpkg.com/stellar-sdk@12.1.0/dist/stellar-sdk.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+</head>
+<body>
+
+<h2>Payroll MVP</h2>
+
+<button onclick="connectWallet()">Conectar Frighter</button>
+<p id="wallet"></p>
+
+<canvas id="qrcode"></canvas>
+<p id="countdown"></p>
+
+<button onclick="checkIn()">Check In</button>
+<button onclick="checkOut()">Check Out</button>
+
+<p id="status"></p>
+
+<script>
+
+const CONTRACT_ID = "CDNWCHNPVVR6KTXSZJR6V5HPWGAUTCCIQ2UG5JDLY4D3Z37S2NSMHVLM";
+const NETWORK_PASSPHRASE = "Test SDF Network ; September 2015";
+const server = new StellarSdk.SorobanRpc.Server("https://soroban-testnet.stellar.org", { allowHttp: false });
+
+let publicKey = null;
+let currentChallenge = null;
+let countdownInterval;
+
+async function connectWallet() {
+
+    if (!window.freighter && !window.freighterApi) {
+        alert("Frighter no detectado. Asegúrate de que la extensión esté habilitada.");
+        return;
+    }
+
+    const freighter = window.freighterApi || window.freighter;
+
+    try {
+        const publicKeyResponse = await freighter.getPublicKey();
+        publicKey = publicKeyResponse;
+        document.getElementById("wallet").innerText = "Wallet: " + publicKey;
+    } catch (e) {
+        alert("No se pudo conectar la wallet");
+    }
+}
+
+async function loadChallenge() {
+    const response = await fetch("/challenge");
+    const data = await response.json();
+
+    currentChallenge = data.challenge;
+
+    const qrContent = JSON.stringify(data);
+
+    const canvas = document.getElementById("qrcode");
+    canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
+    QRCode.toCanvas(canvas, qrContent);
+
+    if (countdownInterval) clearInterval(countdownInterval);
+
+    countdownInterval = setInterval(() => {
+        const now = Math.floor(Date.now() / 1000);
+        const remaining = data.expires - now;
+
+        if (remaining <= 0) {
+            clearInterval(countdownInterval);
+            loadChallenge();
+        } else {
+            document.getElementById("countdown").innerText =
+                "Expira en: " + remaining + " segundos";
+        }
+    }, 1000);
+}
+
+async function generateNonce() {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(currentChallenge + publicKey);
+    const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+async function submitTransaction(functionName) {
+
+    if (!publicKey) {
+        alert("Conecta tu wallet primero");
+        return;
+    }
+
+    const nonce = await generateNonce();
+
+    const account = await server.getAccount(publicKey);
+
+    const tx = new StellarSdk.TransactionBuilder(account, {
+        fee: StellarSdk.BASE_FEE,
+        networkPassphrase: NETWORK_PASSPHRASE
+    })
+    .addOperation(
+        StellarSdk.Operation.invokeContract({
+            contract: CONTRACT_ID,
+            function: functionName,
+            args: [
+                StellarSdk.Address.fromString(publicKey).toScVal(),
+                StellarSdk.nativeToScVal(Buffer.from(nonce, "hex"), { type: "bytes" })
+            ]
+        })
+    )
+    .setTimeout(30)
+    .build();
+
+    const signedTx = await window.freighterApi.signTransaction(tx.toXDR(), { network: "TESTNET" });
+
+    const txObj = StellarSdk.TransactionBuilder.fromXDR(signedTx, NETWORK_PASSPHRASE);
+
+    const response = await server.sendTransaction(txObj);
+
+    document.getElementById("status").innerText = "Asistencia registrada";
+}
+
+async function checkIn() {
+    await submitTransaction("check_in");
+}
+
+async function checkOut() {
+    await submitTransaction("check_out");
+}
+
+loadChallenge();
+
+</script>
+
+</body>
+</html>

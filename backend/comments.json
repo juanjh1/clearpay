@@ -1,0 +1,17 @@
+[
+  {
+    "email": "employee1@mail.com",
+    "comment": "",
+    "timestamp": 1771557150
+  },
+  {
+    "email": "employee1@mail.com",
+    "comment": "Llegue tarde",
+    "timestamp": 1771557159
+  },
+  {
+    "email": "employee1@mail.com",
+    "comment": "Prueba de asistencia. ",
+    "timestamp": 1771584037
+  }
+]

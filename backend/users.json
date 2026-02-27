@@ -1,0 +1,28 @@
+{
+  "users": [
+    {
+      "email": "employee1@mail.com",
+      "password": "123456",
+      "role": "employee",
+      "wallet": "GCBPA3SNKMKQ72MPXTEIOA2AZ5XL3QP6UI2QRXLVPQUSFSRH6QDCDJKO"
+    },
+    {
+      "email": "1@gmail.com",
+      "password": "123456",
+      "role": "admin",
+      "wallet": "GCBPA3SNKMKQ72MPXTEIOA2AZ5XL3QP6UI2QRXLVPQUSFSRH6QDCDJKO"
+    },
+    {
+      "email": "prueba2@gmail.com",
+      "password": "123456",
+      "role": "employee",
+      "wallet": "GDQWBVXVRWTOL5ITSZNXXN5BE3Y7VIMG6ZW4KGHVSZW6LFYMPFUN7PZJ"
+    },
+    {
+      "email": "employee2@mail.com",
+      "password": "123456",
+      "role": "employee",
+      "wallet": "GBC7QHL72VM2DEMRX5GT3C635ZGUFBJIHD46U5BY6MCUSHORGTEOTLUW"
+    }
+  ]
+}
