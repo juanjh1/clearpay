@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Attendance System</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ================= LOGIN ================= -->
+<div id="loginSection" class="login-wrapper">
+
+  <div class="login-card">
+
+    <div class="logo">
+      <img src="/CLEARPAY.png" class="logo-img" alt="ClearPay Logo">
+    </div>
+
+    <h2 class="title">Work Hours Management System</h2>
+
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" id="loginEmail" placeholder="Email" />
+    </div>
+
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="loginPassword" placeholder="Password" />
+    </div>
+
+    <button id="loginBtn" class="main-btn">Login</button>
+
+    <div class="divider"></div>
+
+    <h3>Create Account</h3>
+
+    <input type="email" id="registerEmail" placeholder="Email" />
+    <input type="password" id="registerPassword" placeholder="Password" />
+    <input type="text" id="registerWallet" placeholder="Stellar Wallet Address" />
+
+    <select id="registerRole">
+      <option value="employee">Employee</option>
+      <option value="admin">Admin</option>
+    </select>
+
+    <button id="registerBtn" class="main-btn">Register</button>
+
+  </div>
+</div>
+
+
+
+<!-- ================= APP ================= -->
+<div id="appSection" style="display:none;">
+
+  <!-- HEADER -->
+  <div class="top-header">
+
+    <div class="header-left">
+      <img src="/CLEARPAY.png" class="mini-logo">
+    </div>
+
+    <div class="header-right">
+      <button id="connectBtn" class="secondary-btn small">Connect Wallet</button>
+      <span id="wallet" class="wallet-text"></span>
+      <button id="logoutBtn" class="logout-btn">Logout</button>
+    </div>
+
+  </div>
+
+
+  <div class="app-container">
+
+    <!-- WALLET STATUS -->
+    <div class="wallet-info-bar">
+      <span id="status"></span>
+      <span id="countdown"></span>
+    </div>
+
+
+    <!-- ================= EMPLOYER DASHBOARD ================= -->
+    <div id="employerSection" style="display:none;">
+
+      <div class="admin-layout">
+
+        <!-- SIDEBAR -->
+        <div class="admin-sidebar">
+          <h3>Admin Panel</h3>
+
+          <button class="admin-nav-btn" data-screen="employeesScreen">Employees</button>
+
+          <button class="admin-nav-btn" data-screen="attendanceScreen">Attendance Log</button>
+
+          <button class="admin-nav-btn" data-screen="assistanceScreen">Assistance Requests</button>
+
+          <button class="admin-nav-btn" data-screen="qrScreen">QR Display</button>
+
+          <button class="admin-nav-btn" data-screen="createEmployeeScreen"> Create Employee </button>
+
+          <button class="admin-nav-btn" data-screen="createEscrowScreen"> Create Escrow </button>
+
+          <button class="admin-nav-btn" data-screen="manageEscrowScreen">Manage Escrow</button>
+        </div> 
+
+        <!-- MAIN CONTENT -->
+        <div class="admin-content">
+
+          <!-- SCREEN 1: EMPLOYEES -->
+          <div id="employeesScreen" class="admin-screen">
+
+            <h2>Employees Overview</h2>
+
+            <table>
+              <thead>
+                <tr>
+                  <th>Email</th>
+                  <th>Hours This Week</th>
+                  <th>Hours This Month</th>
+                  <th>Escrow Amount</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="adminEmployeesTable"></tbody>
+            </table>
+
+          </div>
+
+
+          <!-- SCREEN 2: ATTENDANCE LOG -->
+          <div id="attendanceScreen" class="admin-screen" style="display:none;">
+
+            <h2>Attendance Log</h2>
+
+            <table>
+              <thead>
+                <tr>
+                  <th>Wallet</th>
+                  <th>Email</th>
+                  <th>Check-In</th>
+                  <th>Check-Out</th>
+                  <th>Hours</th>
+                </tr>
+              </thead>
+              <tbody id="adminAttendanceTable"></tbody>
+            </table>
+
+          </div>
+
+
+          <!-- SCREEN 3: ASSISTANCE REQUESTS -->
+          <div id="assistanceScreen" class="admin-screen" style="display:none;">
+
+            <h2>Assistance Requests</h2>
+
+            <table>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Email</th>
+                  <th>Comment</th>
+                </tr>
+              </thead>
+              <tbody id="adminAssistanceTable"></tbody>
+            </table>
+
+          </div>
+
+
+          <!-- SCREEN 4: QR LARGE -->
+          <div id="qrScreen" class="admin-screen" style="display:none; text-align:center;">
+
+            <h2>QR Code</h2>
+
+            <canvas id="qrCanvasAdmin" class="large-qr"></canvas>
+            <p id="adminQrCountdown" style="margin-top:20px; font-weight:500;"></p>
+
+          </div>
+
+          <!-- SCREEN 5: CREATE EMPLOYEE -->
+
+          <div id="createEmployeeScreen" class="admin-screen" style="display:none;">
+
+            <h2>Create Employee</h2>
+
+            <div style="max-width:500px; margin-top:20px;">
+
+              <label>Employee Wallet Address</label>
+              <input type="text" id="newEmployeeWallet" placeholder="G..." />
+
+              <button id="createEmployeeBtn" class="main-btn" style="margin-top:20px;">
+                Register On-Chain
+              </button>
+
+              <p id="createEmployeeStatus" style="margin-top:15px;"></p>
+
+            </div>
+
+          </div>
+
+
+          <!-- SCREEN 6: CREATE ESCROW -->
+
+          <div id="createEscrowScreen" class="admin-screen" style="display:none;">
+
+            <h2>Create Escrow</h2>
+
+            <div style="max-width:500px; margin-top:20px;">
+
+              <label>Employee Wallet</label>
+              <input type="text" id="escrowEmployeeWallet" placeholder="G..." />
+
+              <label style="margin-top:15px;">Amount (XLM)</label>
+              <input type="number" id="escrowAmount" placeholder="1" />
+
+              <label style="margin-top:15px;">Required Hours</label>
+              <input type="number" id="escrowRequiredHours" placeholder="160" />
+
+              <label style="margin-top:15px;">Dispute Resolver Wallet</label>
+              <input type="text" id="escrowResolverWallet" placeholder="G..." />
+
+              <button id="createEscrowBtn" class="main-btn" style="margin-top:20px;">
+                Create Escrow On-Chain
+              </button>
+
+              <button id="fundEscrowBtn" class="secondary-btn" style="margin-top:10px;">
+                Fund Escrow
+              </button>
+
+              <p id="createEscrowStatus" style="margin-top:15px;"></p>
+
+            </div>
+
+          </div>
+
+          <!-- SCREEN 7: MANAGE ESCROW -->
+
+          <div id="manageEscrowScreen" class="admin-screen" style="display:none;">
+
+            <h2>Manage Escrow</h2>
+
+            <div style="max-width:500px; margin-top:20px;">
+
+              <label>Employee Wallet</label>
+              <input type="text" id="manageEmployeeWallet" placeholder="G..." />
+
+              <hr style="margin:25px 0;">
+
+              <h3>Add Manual Hours</h3>
+              <input type="number" id="manualHoursInput" placeholder="Extra hours" />
+              <button id="addManualHoursBtn" class="main-btn">
+                Add Manual Hours
+              </button>
+
+              <hr style="margin:25px 0;">
+
+              <h3>Dispute</h3>
+              <button id="openDisputeBtn" class="secondary-btn">
+                Open Dispute
+              </button>
+
+              <button id="resolveToEmployeeBtn" class="main-btn" style="margin-top:10px;">
+                Resolve → Pay Employee
+              </button>
+
+              <button id="resolveToEmployerBtn" class="secondary-btn" style="margin-top:10px;">
+                Resolve → Refund Employer
+              </button>
+
+              <p id="manageEscrowStatus" style="margin-top:20px;"></p>
+
+            </div>
+          
+
+</div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- EMPLOYEE DASHBOARD -->
+    <div id="employeeSection" style="display:none;">
+
+      <!-- STATUS -->
+      <div class="status-card">
+        <div>
+          <p class="status-label">Current Status</p>
+          <h2 id="currentStatus">Off Duty</h2>
+        </div>
+        <div class="clock-buttons">
+          <button id="checkInBtn" class="action-btn primary">Clock In</button>
+          <button id="checkOutBtn" class="action-btn danger">Clock Out</button>
+        </div>
+      </div>
+
+
+      <!-- QR CAMERA -->
+      <div class="qr-card">
+        <h3>Scan QR</h3>
+        <button id="startScanBtn" class="secondary-btn">Start Camera</button>
+        <div id="reader"></div>
+        <p id="scanStatus"></p>
+      </div>
+
+
+      <!-- STATS -->
+      <div class="stats-grid">
+
+        <div class="stat-card">
+          <p>This Week</p>
+          <h2 id="totalWeek">0</h2>
+          <span>hours</span>
+        </div>
+
+        <div class="stat-card">
+          <p>This Month</p>
+          <h2 id="totalMonth">0</h2>
+          <span>hours</span>
+        </div>
+
+        <div class="stat-card">
+          <p>Total Hours</p>
+          <h2 id="totalAccumulated">0</h2>
+          <span>hours</span>
+        </div>
+
+      </div>
+
+
+      <!-- PAYROLL -->
+      <div class="payroll-card" id="payrollCard">
+
+        <p>Payroll Escrow</p>
+
+        <h2 id="payrollAmount">-</h2>
+
+        <span id="payrollStatus" class="payroll-status">
+          No Escrow
+        </span>
+
+        <button id="claimBtn" class="main-btn" style="margin-top:20px;">
+          Claim Payroll
+        </button>
+
+      </div>
+
+
+      <!-- ASSISTANCE -->
+      <div class="assistance-card">
+        <h3>Need to Report an Issue?</h3>
+        <button id="helpBtn" class="secondary-btn">Request Assistance</button>
+      </div>
+
+
+      <!-- MODAL -->
+      <div id="helpModal" class="modal" style="display:none;">
+        <div class="modal-content">
+          <h3>Submit Comment</h3>
+          <textarea id="helpText" placeholder="Describe absence or late arrival..."></textarea>
+          <button id="sendHelpBtn" class="main-btn">Submit</button>
+        </div>
+      </div>
+
+
+      <!-- HISTORY -->
+      <div class="history-section">
+        <h3>Attendance History</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Day</th>
+              <th>Check-in</th>
+              <th>Check-out</th>
+              <th>Hours</th>
+            </tr>
+          </thead>
+          <tbody id="attendanceTableBody"></tbody>
+        </table>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>
