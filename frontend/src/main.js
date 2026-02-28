@@ -83,7 +83,7 @@ function renderApp() {
 
 // ================= ADMIN QR =================
 
-async function loadChallenge() {
+async function loadChalle`1nge() {
 
   const response = await fetch(`${BACKEND_URL}/challenge`);
   const data = await response.json();
@@ -110,7 +110,7 @@ async function loadChallenge() {
 
     if (remaining <= 0) {
       clearInterval(countdownInterval);
-      loadChallenge(); // genera uno nuevo automáticamente
+      await loadChallenge(); // genera uno nuevo automáticamente
     } else {
       countdownText.innerText = "Expira en: " + remaining + " segundos";
     }
