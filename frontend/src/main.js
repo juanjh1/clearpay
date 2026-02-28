@@ -86,6 +86,7 @@ function renderApp() {
 async function loadChallenge() {
 
   const response = await fetch(`${BACKEND_URL}/challenge`);
+  console.log(response)
   const data = await response.json();
   
   currentChallenge = data.challenge;
