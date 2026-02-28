@@ -15,7 +15,7 @@ import {
   scValToNative
 } from "@stellar/stellar-sdk";
 
-const BACKEND_URL = "http://162.209.124.221:8000";
+const BACKEND_URL = "https://fibrovascular-ungivable-jayme.ngrok-free.dev";
 const RPC_URL = "https://soroban-testnet.stellar.org";
 const ATTENDANCE_CONTRACT_ID = "CDNWCHNPVVR6KTXSZJR6V5HPWGAUTCCIQ2UG5JDLY4D3Z37S2NSMHVLM";
 const ESCROW_CONTRACT_ID = "CCYYT4JOOKLM6KMW2OV6CFA5UPGCZJ5Q4T5YU2W72EHUOUS3MYA72AHH";
