@@ -87,10 +87,10 @@ async function loadChallenge() {
 
   const response = await fetch(`${BACKEND_URL}/challenge`);
   const data = await response.json();
-
+  
   currentChallenge = data.challenge;
   expiresAt = data.expires;
-
+  console.log(data)
   const qrCanvas = document.getElementById("qrCanvas");
   const countdownText = document.getElementById("countdown");
 
