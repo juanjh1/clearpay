@@ -103,7 +103,7 @@ async function loadChallenge() {
     clearInterval(countdownInterval);
   }
 
-  countdownInterval = setInterval(() => {
+  countdownInterval = setInterval( async ( ) => {
 
     const now = Math.floor(Date.now() / 1000);
     const remaining = expiresAt - now;
