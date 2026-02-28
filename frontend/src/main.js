@@ -766,7 +766,11 @@ let adminQrInterval = null;
 
 async function loadAdminQR() {
 
-  const response = await fetch(`${BACKEND_URL}/challenge`);
+  const response = await fetch(`${BACKEND_URL}/challenge`, {
+    headers: {
+      "ngrok-skip-browser-warning": "true"  // ← esto
+    }
+  });
   const data = await response.json();
 
   const canvas = document.getElementById("qrCanvasAdmin");
@@ -777,14 +781,14 @@ async function loadAdminQR() {
 
   if (adminQrInterval) clearInterval(adminQrInterval);
 
-  adminQrInterval = setInterval(() => {
+  adminQrInterval = setInterval( async () => {
 
     const now = Math.floor(Date.now() / 1000);
     const remaining = expires - now;
 
     if (remaining <= 0) {
-      clearInterval(adminQrInterval);
-      loadAdminQR();
+      await clearInterval(adminQrInterval);
+      await loadAdminQR();
     } else {
       document.getElementById("adminQrCountdown").innerText =
         `Expires in: ${remaining} seconds`;
