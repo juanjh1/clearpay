@@ -83,7 +83,7 @@ function renderApp() {
 
 // ================= ADMIN QR =================
 
-async function loadChalle`1nge() {
+async function loadChallenge() {
 
   const response = await fetch(`${BACKEND_URL}/challenge`);
   const data = await response.json();
