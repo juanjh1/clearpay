@@ -1012,7 +1012,7 @@ async function addManualHoursOnChain() {
 
   const operation = contract.call(
     "add_manual_hours",
-    new Address(resolver).toScVal(),   // employer
+    new Address(publicKey).toScVal()
     new Address(employee).toScVal(),
     nativeToScVal(hours, { type: "u64" })   // 🔥 importante
   );
