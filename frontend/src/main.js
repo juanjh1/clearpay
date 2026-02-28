@@ -85,7 +85,11 @@ function renderApp() {
 
 async function loadChallenge() {
 
-  const response = await fetch(`${BACKEND_URL}/challenge`);
+  const response = await fetch(`${BACKEND_URL}/challenge`,{
+    headers: {
+      "ngrok-skip-browser-warning": "true"  // ← esto
+    }
+  });
   console.log(response)
   const data = await response.json();
   
